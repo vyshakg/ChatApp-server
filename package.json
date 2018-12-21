@@ -5,10 +5,12 @@
   "author": "vyshak G",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --exec babel-node -- index.js"
+    "start": "nodemon --exec babel-node -- src/index.js"
   },
   "dependencies": {
+    "apollo-server-express": "^2.3.1",
     "babel-eslint": "^10.0.1",
+    "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "graphql": "^14.0.2",
     "mongoose": "^5.4.0"
