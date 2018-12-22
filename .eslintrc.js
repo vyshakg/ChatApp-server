@@ -4,5 +4,6 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'linebreak-style': 0,
+    'no-use-before-define': 0,
   },
 };
