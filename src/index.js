@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
-import { ApolloServer, AuthorizationError } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
 import path from 'path';
 
@@ -29,21 +29,25 @@ dotenv.config();
       typeDefs,
       resolvers,
       cors: false,
-
+      // debug: false,
       playground: {
         settings: {
           'editor.theme': 'dark',
         },
       },
-      // context: ({ req }) => {
-      //   // get the user token from the headers
-      //   const token = req.headers.authorization || '';
-      //   const { id } = jwt.verify(token, process.env.SECRET);
-      //   // try to retrieve a user with the token
-      //   if (token && !mongoose.Types.ObjectId.isValid(id)) throw new AuthorizationError('you must be logged in');
-      //   // add the user to the context
-      //   return { id };
-      // },
+      context: ({ req }) => {
+        const token = req.headers.authorization || '';
+        try {
+          if (token) {
+            const { id } = jwt.decode(token);
+            mongoose.Types.ObjectId.isValid(id);
+            req.id = id;
+          }
+        } catch (e) {
+          throw new AuthenticationError('you must be logged in');
+        }
+        return req;
+      },
     });
     server.applyMiddleware({ app });
 

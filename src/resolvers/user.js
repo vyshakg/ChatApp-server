@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 import { UserInputError, AuthenticationError } from 'apollo-server-express';
-import User from '../models';
+import Joi from 'joi';
+import { User } from '../models';
 import formatError from '../formatError';
+import { signUp, signIn } from '../validation';
 
 export default {
   Query: {
-    me: (root, args, { id }) => {
-      User.findById(id);
-    },
+    me: (root, args, { id }) => User.findById(id),
     user: (root, { id }) => {
       try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -22,28 +22,29 @@ export default {
   },
   Mutation: {
     signUp: async (root, args) => {
-      // TODO : validation
       try {
+        await Joi.validate(args, signUp, { abortEarly: false });
         const user = await User.create(args);
         return {
           ok: true,
-          id: user.id, // eslint-disable-line no-underscore-dangle
+          id: user.id,
         };
       } catch (e) {
         return {
           ok: false,
-          errors: formatError(e.errors),
+          errors: formatError(e),
         };
       }
     },
     signIn: async (root, { email, password }) => {
-      // TODO : validation
-      const message = 'Incorrect email or password. Please try again.';
       try {
+        await Joi.validate({ email, password }, signIn, { abortEarly: false });
+
         const user = await User.findOne({ email });
         if (!user || !(await user.matchesPassword(password))) {
-          throw new AuthenticationError(message);
+          throw new AuthenticationError();
         }
+        user.changeStatus(true);
         return {
           ok: true,
           username: user.username,
@@ -52,7 +53,7 @@ export default {
       } catch (e) {
         return {
           ok: false,
-          errors: e,
+          errors: formatError(e),
         };
       }
     },

@@ -7,6 +7,7 @@ export default gql`
     email: String!
     phoneNo: String!
     createdAt: String!
+    online: Boolean!
   }
 
   type SignInResponse {

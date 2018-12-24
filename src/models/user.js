@@ -21,6 +21,16 @@ const userSchema = new Schema(
     },
     phoneNo: String,
     password: String,
+    online: {
+      type: Boolean,
+      default: false,
+    },
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,
@@ -38,6 +48,9 @@ userSchema.statics.doesntExist = async function doesntExist(options) {
 
 userSchema.methods.matchesPassword = function matchesPassword(password) {
   return compare(password, this.password);
+};
+userSchema.methods.changeStatus = function changeStatus(status) {
+  this.online = status;
 };
 
 userSchema.methods.createToken = function createToken() {
