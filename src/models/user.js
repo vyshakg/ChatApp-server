@@ -31,6 +31,12 @@ const userSchema = new Schema(
         ref: 'User',
       },
     ],
+    conversations: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Conversation',
+      },
+    ],
   },
   {
     timestamps: true,

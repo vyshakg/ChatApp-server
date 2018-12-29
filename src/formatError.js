@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 export default (e) => {
   const result = [];
-  console.log(e);
   if (e.name === 'ValidationError') {
     if (e.isJoi) {
       // eslint-disable-next-line array-callback-return
@@ -15,7 +14,6 @@ export default (e) => {
       });
     } else {
       Object.values(e.errors).map(err => result.push(_.pick(err, ['path', 'message'])));
-      console.log(result);
     }
   } else if (e.extensions.code === 'UNAUTHENTICATED') {
     result.push({

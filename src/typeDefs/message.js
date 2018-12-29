@@ -1,9 +1,9 @@
 export default `
   type Message {
     id: ID!
-    text: String
+    text: String!
     sender: User!
-    createdAt: String!
+    createdAt: MyCustomScalar!
     
   }
   type Query {

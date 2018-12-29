@@ -7,7 +7,9 @@ import { signUp, signIn } from '../validation';
 
 export default {
   Query: {
-    me: (root, args, { id }) => User.findById(id),
+    me: (root, args, { id }) => User.findOne({ _id: id })
+      .populate({ path: 'conversations', populate: { path: 'participant', model: 'User' } })
+      .exec(),
     user: (root, { id }) => {
       try {
         if (!mongoose.Types.ObjectId.isValid(id)) {

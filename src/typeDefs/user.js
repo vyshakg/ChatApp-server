@@ -1,13 +1,16 @@
 import { gql } from 'apollo-server-express';
 
 export default gql`
+  scalar MyCustomScalar
+
   type User {
     id: ID!
     username: String!
     email: String!
     phoneNo: String!
-    createdAt: String!
+    createdAt: MyCustomScalar!
     online: Boolean!
+    conversations: [Conversation]!
   }
 
   type SignInResponse {

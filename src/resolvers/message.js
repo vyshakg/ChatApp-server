@@ -7,6 +7,7 @@ export default {
         const message = await Message.find({ conversationId })
           .populate('sender')
           .exec();
+
         return message;
       } catch (e) {
         return e;

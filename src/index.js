@@ -36,7 +36,9 @@ dotenv.config();
         },
       },
       context: ({ req }) => {
-        const token = req.headers.authorization || '';
+        let token = req.headers.authorization || '';
+        [, token] = token.split(' ');
+
         try {
           if (token) {
             const { id } = jwt.decode(token);

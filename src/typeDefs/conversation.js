@@ -1,12 +1,12 @@
 export default `
-type  Conversation{ 
-    id: ID!
-    message: [Message!]!
-    participants : [User!]!
-}
 
+type Conversation {
+    id :ID!
+    participant : User!
+    createdAt : MyCustomScalar!
+}
 type Query{
-    conversation(conversationId : ID!) : Conversation!
+    allConversation : User!
 }
 
 type Mutation {
