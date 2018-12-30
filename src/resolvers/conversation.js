@@ -23,10 +23,16 @@ export default {
           participant: mongoose.Types.ObjectId(userid),
         });
         const cid = await conversation.save();
+        const newConversation = await Conversation.findOne({ _id: cid.id })
+          .populate('participant')
+          .exec();
 
         await User.updateOne({ _id: id }, { $push: { conversations: cid.id } });
 
-        return true;
+        return {
+          ok: true,
+          conversation: newConversation,
+        };
       } catch (e) {
         console.log(e);
         return false;

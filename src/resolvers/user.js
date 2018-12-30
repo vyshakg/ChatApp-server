@@ -20,7 +20,7 @@ export default {
         return e;
       }
     },
-    allUsers: () => User.find({}),
+    allUsers: (root, args, { id }) => User.find({ _id: { $ne: id } }),
   },
   Mutation: {
     signUp: async (root, args) => {
