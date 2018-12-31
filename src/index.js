@@ -1,16 +1,24 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import { makeExecutableSchema } from 'graphql-tools';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import { createServer } from 'http';
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './typeDefs')));
 
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')));
 
 dotenv.config();
+const { PORT } = process.env;
+
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
 
 (async () => {
   try {
@@ -26,8 +34,7 @@ dotenv.config();
     app.disable('x-powered-by');
 
     const server = new ApolloServer({
-      typeDefs,
-      resolvers,
+      schema,
       cors: false,
       // debug: false,
       playground: {
@@ -52,8 +59,12 @@ dotenv.config();
       },
     });
     server.applyMiddleware({ app });
-
-    app.listen({ port: process.env.PORT }, () => console.log(`http://localhost:${process.env.PORT}${server.graphqlPath}`));
+    const httpServer = createServer(app);
+    server.installSubscriptionHandlers(httpServer);
+    httpServer.listen({ port: PORT }, () => {
+      console.log(`http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(`ws://localhost:${PORT}${server.subscriptionsPath}`);
+    });
   } catch (e) {
     console.error(e);
   }
