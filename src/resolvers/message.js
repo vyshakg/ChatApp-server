@@ -1,11 +1,30 @@
+import mongoose from 'mongoose';
+import { PubSub } from 'graphql-subscriptions';
 import { Message } from '../models';
 
+const { withFilter } = require('apollo-server-express');
+
+const NEW_MESSAGE = 'NEW_MESSAGE';
+
+const pubsub = new PubSub();
+
 export default {
+  Subscription: {
+    newConversationMessage: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(NEW_MESSAGE),
+        (payload, args) => payload.newConversationMessage.conversationId == args.conversationId, // eslint-disable-line
+      ),
+    },
+  },
   Query: {
     messages: async (root, { conversationId }) => {
       try {
+        if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+          return [];
+        }
         const message = await Message.find({ conversationId })
-          .populate('sender')
+          .populate('from')
           .exec();
 
         return message;
@@ -19,11 +38,19 @@ export default {
       try {
         const message = new Message({
           conversationId,
-          sender: id,
+          from: id,
           text,
         });
 
-        await message.save();
+        let newMessage = await message.save();
+        // eslint-disable-next-line
+        newMessage = await Message.findOne({ _id: newMessage._id })
+          .populate('from')
+          .exec();
+
+        pubsub.publish(NEW_MESSAGE, {
+          newConversationMessage: newMessage,
+        });
         return true;
       } catch (e) {
         return false;

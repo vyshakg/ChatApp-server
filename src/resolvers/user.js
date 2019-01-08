@@ -4,12 +4,16 @@ import Joi from 'joi';
 import { User } from '../models';
 import formatError from '../formatError';
 import { signUp, signIn } from '../validation';
+import allConversationFucntion from '../utils/resolverFunctions';
 
 export default {
   Query: {
-    me: (root, args, { id }) => User.findOne({ _id: id })
-      .populate({ path: 'conversations', populate: { path: 'participant', model: 'User' } })
-      .exec(),
+    me: async (root, args, { id }) => {
+      const user = await User.findOne({ _id: id });
+      user.conversations = allConversationFucntion(id);
+      return user;
+    },
+
     user: (root, { id }) => {
       try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -46,7 +50,7 @@ export default {
         if (!user || !(await user.matchesPassword(password))) {
           throw new AuthenticationError();
         }
-        user.changeStatus(true);
+
         return {
           ok: true,
           username: user.username,

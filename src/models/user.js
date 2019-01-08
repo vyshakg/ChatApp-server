@@ -25,18 +25,6 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    friends: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
-    conversations: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Conversation',
-      },
-    ],
   },
   {
     timestamps: true,
@@ -54,9 +42,6 @@ userSchema.statics.doesntExist = async function doesntExist(options) {
 
 userSchema.methods.matchesPassword = function matchesPassword(password) {
   return compare(password, this.password);
-};
-userSchema.methods.changeStatus = function changeStatus(status) {
-  this.online = status;
 };
 
 userSchema.methods.createToken = function createToken() {

@@ -1,20 +1,22 @@
 export default `
-
-type Conversation {
-    id :ID!
-    participant : User!
-    createdAt : MyCustomScalar!
-}
-type createConversationResponse{
-    ok : Boolean!
-    conversation : Conversation!
-}
-
 type Query{
-    allConversation : User!
+    allConversation : [Conversation!]
+
 }
 
 type Mutation {
     createConversation(userid : ID!) : createConversationResponse!
 }
+
+type Conversation {
+    id :ID!
+    participants : [User]!
+    createdAt : MyCustomScalar!
+}
+
+type createConversationResponse{
+    ok : Boolean!
+    conversation : Conversation!
+}
+
 `;

@@ -1,33 +1,29 @@
-import mongoose, { model } from 'mongoose';
-import { Conversation, Message, User } from '../models';
+import mongoose from 'mongoose';
+import { Conversation } from '../models';
+import allConversationFucntion from '../utils/resolverFunctions';
 
 export default {
   Query: {
-    allConversation: async (root, args, { id }) => {
-      try {
-        const allConversation = await User.findOne({ _id: id })
-          .populate({ path: 'conversations', populate: { path: 'participant', model: 'User' } })
-          .exec();
-        console.log(allConversation, allConversation.conversations[0].participant);
-        return allConversation;
-      } catch (e) {
-        return e;
-      }
-    },
+    allConversation: (root, args, { id }) => allConversationFucntion(id),
   },
 
   Mutation: {
     createConversation: async (root, { userid }, { id }) => {
       try {
         const conversation = new Conversation({
-          participant: mongoose.Types.ObjectId(userid),
+          participants: [mongoose.Types.ObjectId(userid), mongoose.Types.ObjectId(id)],
         });
         const cid = await conversation.save();
+
         const newConversation = await Conversation.findOne({ _id: cid.id })
-          .populate('participant')
+          .populate('participants')
           .exec();
 
-        await User.updateOne({ _id: id }, { $push: { conversations: cid.id } });
+        const filterParticipants = newConversation.participants.filter((participant) => {
+          if (participant.id === id) return false;
+          return true;
+        });
+        newConversation.participants = filterParticipants; // eslint-disable-line no-param-reassign
 
         return {
           ok: true,
