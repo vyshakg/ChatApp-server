@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
-import { PubSub } from 'graphql-subscriptions';
+import pubsub from '../pubSub';
 import { Message } from '../models';
 
 const { withFilter } = require('apollo-server-express');
 
 const NEW_MESSAGE = 'NEW_MESSAGE';
-
-const pubsub = new PubSub();
 
 export default {
   Subscription: {

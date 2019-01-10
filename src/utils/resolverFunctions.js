@@ -1,4 +1,4 @@
-import { Conversation } from '../models';
+import { Conversation, Message } from '../models';
 
 export default async (id) => {
   const allConversation = await Conversation.find({ participants: id })
