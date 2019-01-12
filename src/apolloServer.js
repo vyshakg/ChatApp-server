@@ -15,6 +15,7 @@ const schema = makeExecutableSchema({
 export default new ApolloServer({
   schema,
   cors: false,
+  debug: true,
   playground: {
     settings: {
       'editor.theme': 'dark',

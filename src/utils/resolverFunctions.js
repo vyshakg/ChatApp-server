@@ -1,8 +1,13 @@
-import { Conversation, Message } from '../models';
+import { Conversation } from '../models';
 
 export default async (id) => {
   const allConversation = await Conversation.find({ participants: id })
-    .populate('participants')
+    .populate({
+      path: 'participants',
+      populate: {
+        path: 'profilePic',
+      },
+    })
     .exec();
   // eslint-disable-next-line array-callback-return
   allConversation.map((conversation) => {
@@ -12,5 +17,6 @@ export default async (id) => {
     });
     conversation.participants = filterParticipants; // eslint-disable-line no-param-reassign
   });
+
   return allConversation;
 };

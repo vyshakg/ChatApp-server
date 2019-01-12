@@ -25,6 +25,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    profilePic: {
+      type: Schema.Types.ObjectId,
+      ref: 'ProfilePic',
+    },
   },
   {
     timestamps: true,

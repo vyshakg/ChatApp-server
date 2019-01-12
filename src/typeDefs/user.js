@@ -1,14 +1,23 @@
 import { gql } from 'apollo-server-express';
 
 export default gql`
+  scalar JSON
+
   type Query {
     me: User!
     user(id: ID!): User
     allUsers: [User!]!
+    allProfilePic: JSON
   }
 
   type Mutation {
-    signUp(email: String!, username: String!, password: String!, phoneNo: String!): SignUpResponse!
+    signUp(
+      email: String!
+      username: String!
+      password: String!
+      phoneNo: String!
+      profilePic: ID!
+    ): SignUpResponse!
     signIn(email: String!, password: String!): SignInResponse!
   }
 
@@ -19,6 +28,7 @@ export default gql`
     phoneNo: String!
     online: Boolean!
     conversations: [Conversation]!
+    profilePic: JSON
   }
 
   type SignInResponse {

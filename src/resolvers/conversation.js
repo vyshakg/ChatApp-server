@@ -1,20 +1,12 @@
 import mongoose from 'mongoose';
 import { Conversation, Message } from '../models';
 import allConversationFucntion from '../utils/resolverFunctions';
-import pubsub from '../pubSub';
+// import pubsub from '../pubSub';
 
-const { withFilter } = require('apollo-server-express');
+// const { withFilter } = require('apollo-server-express');
 
-const NEW_CONVERSATION_MESSAGE = 'NEW_CONVERSATION_MESSAGE';
+// const NEW_CONVERSATION_MESSAGE = 'NEW_CONVERSATION_MESSAGE';
 export default {
-  // Subscription: {
-  //   newConversation: {
-  //     subscribe: withFilter(
-  //       () => pubsub.asyncIterator(NEW_CONVERSATION_MESSAGE),
-  //       (payload, args) => payload.newConversation.participants[0].id == args.userid, // eslint-disable-line
-  //     ),
-  //   },
-  // },
   Query: {
     allConversation: (root, args, { id }) => allConversationFucntion(id),
   },
@@ -28,7 +20,12 @@ export default {
         const cid = await conversation.save();
 
         const newConversation = await Conversation.findOne({ _id: cid.id })
-          .populate('participants')
+          .populate({
+            path: 'participants',
+            populate: {
+              path: 'profilePic',
+            },
+          })
           .exec();
 
         const filterParticipants = newConversation.participants.filter((participant) => {
@@ -48,7 +45,7 @@ export default {
         return false;
       }
     },
-    deleteConversation: async (root, { conversationId }, context) => {
+    deleteConversation: async (root, { conversationId }) => {
       try {
         const conversation = await Conversation.findOne({ _id: conversationId });
         if (!conversation) {
