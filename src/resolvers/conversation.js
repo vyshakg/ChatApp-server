@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Conversation } from '../models';
+import { Conversation, Message } from '../models';
 import allConversationFucntion from '../utils/resolverFunctions';
 import pubsub from '../pubSub';
 
@@ -7,14 +7,14 @@ const { withFilter } = require('apollo-server-express');
 
 const NEW_CONVERSATION_MESSAGE = 'NEW_CONVERSATION_MESSAGE';
 export default {
-  Subscription: {
-    newConversation: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator(NEW_CONVERSATION_MESSAGE),
-        (payload, args) => payload.newConversation.participants[0].id == args.userid, // eslint-disable-line
-      ),
-    },
-  },
+  // Subscription: {
+  //   newConversation: {
+  //     subscribe: withFilter(
+  //       () => pubsub.asyncIterator(NEW_CONVERSATION_MESSAGE),
+  //       (payload, args) => payload.newConversation.participants[0].id == args.userid, // eslint-disable-line
+  //     ),
+  //   },
+  // },
   Query: {
     allConversation: (root, args, { id }) => allConversationFucntion(id),
   },
@@ -36,13 +36,27 @@ export default {
           return true;
         });
         newConversation.participants = filterParticipants; // eslint-disable-line no-param-reassign
-        pubsub.publish(NEW_CONVERSATION_MESSAGE, {
-          newConversation,
-        });
+        // pubsub.publish(NEW_CONVERSATION_MESSAGE, {
+        //   newConversation,
+        // });
         return {
           ok: true,
           conversation: newConversation,
         };
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
+    },
+    deleteConversation: async (root, { conversationId }, context) => {
+      try {
+        const conversation = await Conversation.findOne({ _id: conversationId });
+        if (!conversation) {
+          return false;
+        }
+        await Message.deleteMany({ conversationId });
+        await Conversation.deleteOne({ _id: conversationId });
+        return true;
       } catch (e) {
         console.log(e);
         return false;

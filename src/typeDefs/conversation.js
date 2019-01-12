@@ -6,6 +6,7 @@ type Query{
 
 type Mutation {
     createConversation(userid : ID!) : createConversationResponse!
+    deleteConversation(conversationId : ID!) : Boolean!
 }
 
 type Conversation {

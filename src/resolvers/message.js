@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import pubsub from '../pubSub';
-import { Message } from '../models';
+import { Message, Conversation } from '../models';
 
 const { withFilter } = require('apollo-server-express');
 
@@ -34,6 +34,10 @@ export default {
   Mutation: {
     createMessage: async (root, { conversationId, text }, { id }) => {
       try {
+        const conversation = await Conversation.findOne({ _id: conversationId });
+        if (!conversation) {
+          return false;
+        }
         const message = new Message({
           conversationId,
           from: id,
