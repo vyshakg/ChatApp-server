@@ -1,19 +1,24 @@
 import mongoose from 'mongoose';
+import { AuthenticationError } from 'apollo-server-express';
 import { Conversation, Message } from '../models';
 import allConversationFucntion from '../utils/resolverFunctions';
-// import pubsub from '../pubSub';
 
-// const { withFilter } = require('apollo-server-express');
-
-// const NEW_CONVERSATION_MESSAGE = 'NEW_CONVERSATION_MESSAGE';
 export default {
   Query: {
-    allConversation: (root, args, { id }) => allConversationFucntion(id),
+    allConversation: (root, args, { id }) => {
+      if (!id) {
+        throw new AuthenticationError();
+      }
+      return allConversationFucntion(id);
+    },
   },
 
   Mutation: {
     createConversation: async (root, { userid }, { id }) => {
       try {
+        if (!id) {
+          throw new AuthenticationError();
+        }
         const conversation = new Conversation({
           participants: [mongoose.Types.ObjectId(userid), mongoose.Types.ObjectId(id)],
         });
@@ -33,9 +38,7 @@ export default {
           return true;
         });
         newConversation.participants = filterParticipants; // eslint-disable-line no-param-reassign
-        // pubsub.publish(NEW_CONVERSATION_MESSAGE, {
-        //   newConversation,
-        // });
+
         return {
           ok: true,
           conversation: newConversation,
@@ -45,8 +48,11 @@ export default {
         return false;
       }
     },
-    deleteConversation: async (root, { conversationId }) => {
+    deleteConversation: async (root, { conversationId }, { id }) => {
       try {
+        if (!id) {
+          throw new AuthenticationError();
+        }
         const conversation = await Conversation.findOne({ _id: conversationId });
         if (!conversation) {
           return false;

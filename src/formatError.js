@@ -22,5 +22,4 @@ export default (e) => {
     });
   }
   return result;
-  //   return [{ path: 'name', message: 'something went wrong' }];
 };

@@ -5,6 +5,8 @@
   "author": "vyshak G",
   "license": "MIT",
   "scripts": {
+    "serve": "node dist/index.js",
+    "build": "babel src -d dist",
     "start": "nodemon --exec babel-node -- src/index.js"
   },
   "dependencies": {

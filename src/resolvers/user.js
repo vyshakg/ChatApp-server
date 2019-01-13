@@ -11,11 +11,11 @@ export default {
   JSON: GraphQLJSON,
   Query: {
     me: async (root, args, { id }) => {
+      if (!id) {
+        throw new AuthenticationError();
+      }
       const user = await User.findOne({ _id: id }).populate('profilePic');
       user.conversations = allConversationFucntion(id);
-      console.log(user.profilePic);
-      console.log('----------------------------');
-
       return user;
     },
     allProfilePic: () => ProfilePic.find({}),
@@ -29,7 +29,12 @@ export default {
         return e;
       }
     },
-    allUsers: (root, args, { id }) => User.find({ _id: { $ne: id } }).populate('profilePic'),
+    allUsers: (root, args, { id }) => {
+      if (!id) {
+        throw new AuthenticationError();
+      }
+      return User.find({ _id: { $ne: id } }).populate('profilePic');
+    },
   },
   Mutation: {
     signUp: async (root, args) => {

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { AuthenticationError } from 'apollo-server-express';
 import pubsub from '../pubSub';
 import { Message, Conversation } from '../models';
 
@@ -16,8 +17,11 @@ export default {
     },
   },
   Query: {
-    messages: async (root, { conversationId }) => {
+    messages: async (root, { conversationId }, { id }) => {
       try {
+        if (!id) {
+          throw new AuthenticationError();
+        }
         if (!mongoose.Types.ObjectId.isValid(conversationId)) {
           return [];
         }
@@ -39,6 +43,9 @@ export default {
   Mutation: {
     createMessage: async (root, { conversationId, text }, { id }) => {
       try {
+        if (!id) {
+          throw new AuthenticationError();
+        }
         const conversation = await Conversation.findOne({ _id: conversationId });
         if (!conversation) {
           return false;

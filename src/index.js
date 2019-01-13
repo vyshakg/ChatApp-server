@@ -6,8 +6,7 @@ import connectMongoDb from './connectMongodb';
 // import startFunction from './images';
 
 dotenv.config();
-const { PORT } = process.env;
-
+const PORT = process.env.PORT || 4000;
 (async () => {
   try {
     connectMongoDb();
@@ -19,7 +18,7 @@ const { PORT } = process.env;
     server.applyMiddleware({ app });
     const httpServer = createServer(app);
     server.installSubscriptionHandlers(httpServer);
-    httpServer.listen({ port: PORT }, () => {
+    httpServer.listen(PORT, () => {
       console.log(`http://localhost:${PORT}${server.graphqlPath}`);
     });
   } catch (e) {
