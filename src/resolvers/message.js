@@ -22,7 +22,12 @@ export default {
           return [];
         }
         const message = await Message.find({ conversationId })
-          .populate('from')
+          .populate({
+            path: 'from',
+            populate: {
+              path: 'profilePic',
+            },
+          })
           .exec();
 
         return message;
@@ -47,7 +52,12 @@ export default {
         let newMessage = await message.save();
         // eslint-disable-next-line
         newMessage = await Message.findOne({ _id: newMessage._id })
-          .populate('from')
+          .populate({
+            path: 'from',
+            populate: {
+              path: 'profilePic',
+            },
+          })
           .exec();
 
         pubsub.publish(NEW_MESSAGE, {

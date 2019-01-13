@@ -13,6 +13,9 @@ export default {
     me: async (root, args, { id }) => {
       const user = await User.findOne({ _id: id }).populate('profilePic');
       user.conversations = allConversationFucntion(id);
+      console.log(user.profilePic);
+      console.log('----------------------------');
+
       return user;
     },
     allProfilePic: () => ProfilePic.find({}),
