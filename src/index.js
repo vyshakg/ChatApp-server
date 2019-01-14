@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 4000;
     app.disable('x-powered-by');
     // startFunction();
     const server = apolloServer;
-    server.applyMiddleware({ app, cors: false });
+    server.applyMiddleware({ app, cors: true });
     const httpServer = createServer(app);
     server.installSubscriptionHandlers(httpServer);
     httpServer.listen(PORT, () => {
