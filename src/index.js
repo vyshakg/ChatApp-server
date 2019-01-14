@@ -1,11 +1,9 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import { createServer } from 'http';
 import apolloServer from './apolloServer';
 import connectMongoDb from './connectMongodb';
 import startFunction from './images';
 
-dotenv.config();
 const PORT = process.env.PORT || 4000;
 (async () => {
   try {
