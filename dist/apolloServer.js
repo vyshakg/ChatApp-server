@@ -32,9 +32,14 @@ exports.default = new _apolloServerExpress.ApolloServer({
   schema,
   cors: false,
   debug: true,
-  playground: process.env.NODE_ENV === 'production' ? false : {
+  playground:
+  // process.env.NODE_ENV === 'production'
+  //   ? false
+  //   :
+  {
     settings: {
-      'editor.theme': 'dark'
+      'editor.theme': 'dark',
+      'request.credentials': 'include'
     }
   },
   // eslint-disable-next-line consistent-return

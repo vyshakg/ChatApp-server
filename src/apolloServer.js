@@ -23,6 +23,7 @@ export default new ApolloServer({
     {
       settings: {
         'editor.theme': 'dark',
+        'request.credentials': 'include',
       },
     },
   // eslint-disable-next-line consistent-return
