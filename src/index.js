@@ -19,6 +19,7 @@ const PORT = process.env.PORT || 4000;
     httpServer.listen(PORT, () => {
       console.log(`http://localhost:${PORT}${server.graphqlPath}`);
     });
+    // checking
   } catch (e) {
     console.error(e);
     console.error('Something Went Worng!!');
