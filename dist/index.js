@@ -19,6 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // import startFunction from './images';
 
 const PORT = process.env.PORT || 4000;
+
 (async () => {
   try {
     await (0, _connectMongodb2.default)();
@@ -31,9 +32,8 @@ const PORT = process.env.PORT || 4000;
     const httpServer = (0, _http.createServer)(app);
     server.installSubscriptionHandlers(httpServer);
     httpServer.listen(PORT, () => {
-      console.log(`http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(`Running on port ==> ${PORT}${server.graphqlPath}`);
     });
-    // checking
   } catch (e) {
     console.error(e);
     console.error('Something Went Worng!!');
