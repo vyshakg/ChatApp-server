@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
-const MONGOURL = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/ChatApp';
+const MONGOURL = process.env.NODE_ENV
+  ? `mongodb:${process.env.MONGODB_USER}:${encodeURIComponent(
+    process.env.MONGODB_PASSWORD,
+  )}@ds257054.mlab.com:57054/chat-app`
+  : 'mongodb://localhost:27017/ChatApp';
 export default async () => {
   try {
     await mongoose.connect(
