@@ -10,6 +10,6 @@ export default async () => {
       },
     );
   } catch (e) {
-    console.log("Couldn't connect with Database");
+    console.log("Couldn't connect with Database", e);
   }
 };

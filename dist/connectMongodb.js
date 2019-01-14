@@ -10,7 +10,7 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const MONGOURL = 'mongodb://mongo:27017/ChatApp';
+const MONGOURL = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/ChatApp';
 
 exports.default = async () => {
   try {
@@ -18,6 +18,6 @@ exports.default = async () => {
       useNewUrlParser: true
     });
   } catch (e) {
-    console.log("Couldn't connect with Database");
+    console.log("Couldn't connect with Database", e);
   }
 };

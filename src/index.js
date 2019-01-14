@@ -2,16 +2,16 @@ import express from 'express';
 import { createServer } from 'http';
 import apolloServer from './apolloServer';
 import connectMongoDb from './connectMongodb';
-import startFunction from './images';
+// import startFunction from './images';
 
 const PORT = process.env.PORT || 4000;
 (async () => {
   try {
-    connectMongoDb();
+    await connectMongoDb();
 
     const app = express();
     app.disable('x-powered-by');
-    startFunction();
+    // startFunction();
     const server = apolloServer;
     server.applyMiddleware({ app });
     const httpServer = createServer(app);
