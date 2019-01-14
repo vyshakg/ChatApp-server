@@ -14,10 +14,7 @@ const PORT = process.env.PORT || 4000;
     app.disable('x-powered-by');
     // startFunction();
     const server = apolloServer;
-    server.applyMiddleware({
-      app,
-      cors: 'https://5c3cd61750ab38eaf9b73029--zealous-galileo-ff9e75.netlify.com',
-    });
+    server.applyMiddleware({ app, cors: true });
     const httpServer = createServer(app);
     server.installSubscriptionHandlers(httpServer);
     httpServer.listen(PORT, () => {
