@@ -5,6 +5,7 @@ import connectMongoDb from './connectMongodb';
 // import startFunction from './images';
 
 const PORT = process.env.PORT || 4000;
+
 (async () => {
   try {
     await connectMongoDb();
@@ -17,9 +18,8 @@ const PORT = process.env.PORT || 4000;
     const httpServer = createServer(app);
     server.installSubscriptionHandlers(httpServer);
     httpServer.listen(PORT, () => {
-      console.log(`http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(`Running on port ==> ${PORT}${server.graphqlPath}`);
     });
-    // checking
   } catch (e) {
     console.error(e);
     console.error('Something Went Worng!!');
