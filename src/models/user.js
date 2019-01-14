@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { hash, compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const SECRET = 'secretkey';
 const { Schema } = mongoose;
 const userSchema = new Schema(
   {
@@ -54,7 +55,7 @@ userSchema.methods.createToken = function createToken() {
       email: this.email,
       id: this._id, // eslint-disable-line no-underscore-dangle
     },
-    process.env.SECRET,
+    SECRET,
   );
 };
 

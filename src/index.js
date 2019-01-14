@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import apolloServer from './apolloServer';
 import connectMongoDb from './connectMongodb';
-// import startFunction from './images';
+import startFunction from './images';
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 4000;
 
     const app = express();
     app.disable('x-powered-by');
-    // startFunction();
+    startFunction();
     const server = apolloServer;
     server.applyMiddleware({ app });
     const httpServer = createServer(app);
