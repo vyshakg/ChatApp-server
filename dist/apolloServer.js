@@ -32,7 +32,7 @@ exports.default = new _apolloServerExpress.ApolloServer({
   schema,
   cors: false,
   debug: true,
-  playground: {
+  playground: process.env.NODE_ENV === 'production' ? false : {
     settings: {
       'editor.theme': 'dark'
     }

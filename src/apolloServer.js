@@ -16,11 +16,14 @@ export default new ApolloServer({
   schema,
   cors: false,
   debug: true,
-  playground: {
-    settings: {
-      'editor.theme': 'dark',
-    },
-  },
+  playground:
+    process.env.NODE_ENV === 'production'
+      ? false
+      : {
+        settings: {
+          'editor.theme': 'dark',
+        },
+      },
   // eslint-disable-next-line consistent-return
   context: async ({ req, connection }) => {
     let token = '';

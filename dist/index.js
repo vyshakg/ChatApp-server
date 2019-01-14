@@ -27,12 +27,13 @@ const PORT = process.env.PORT || 4000;
     app.disable('x-powered-by');
     // startFunction();
     const server = _apolloServer2.default;
-    server.applyMiddleware({ app });
+    server.applyMiddleware({ app, cors: false });
     const httpServer = (0, _http.createServer)(app);
     server.installSubscriptionHandlers(httpServer);
     httpServer.listen(PORT, () => {
       console.log(`http://localhost:${PORT}${server.graphqlPath}`);
     });
+    // checking
   } catch (e) {
     console.error(e);
     console.error('Something Went Worng!!');
