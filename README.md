@@ -1,4 +1,6 @@
-# ChatApp
+# Chat App Server
+
+Chat App Client - https://github.com/vyshakg/ChatApp-client
 
 Live demo - https://chat-app-graphql.netlify.com
 
