@@ -53,7 +53,7 @@ REST and GraphQL are two ways to send data over HTTP. The REST-based approach is
 - Docker Container
   - used Docker to create a container using `docker-compose.yml` file for mongodb and chat-app-server
  - Heroku
-  - backend is deployed in the Heroku without docker container
+    - backend is deployed in the Heroku without docker container
 
 To start development server run
 ```sh
