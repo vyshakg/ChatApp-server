@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import { hash, compare } from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { compare, hash } from "bcryptjs";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
-const SECRET = 'secretkey';
+const SECRET = "secretkey";
 const { Schema } = mongoose;
 const userSchema = new Schema(
   {
@@ -10,34 +10,34 @@ const userSchema = new Schema(
       type: String,
       validate: {
         validator: email => User.doesntExist({ email }),
-        message: ({ value }) => `Email ${value} has already been taken.`, // TODO: security
-      },
+        message: ({ value }) => `Email ${value} has already been taken.` // TODO: security
+      }
     },
     username: {
       type: String,
       validate: {
         validator: username => User.doesntExist({ username }),
-        message: ({ value }) => `Username ${value} has already been taken.`, // TODO: security
-      },
+        message: ({ value }) => `Username ${value} has already been taken.` // TODO: security
+      }
     },
     phoneNo: String,
     password: String,
     online: {
       type: Boolean,
-      default: false,
+      default: false
     },
     profilePic: {
-      type: Schema.Types.ObjectId,
-      ref: 'ProfilePic',
-    },
+      type: String,
+      default: "jenny"
+    }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 // eslint-disable-next-line
-userSchema.pre('save', async function() {
+userSchema.pre("save", async function() {
   this.password = await hash(this.password, 10);
 });
 
@@ -53,12 +53,12 @@ userSchema.methods.createToken = function createToken() {
   return jwt.sign(
     {
       email: this.email,
-      id: this._id, // eslint-disable-line no-underscore-dangle
+      id: this._id // eslint-disable-line no-underscore-dangle
     },
-    SECRET,
+    SECRET
   );
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;

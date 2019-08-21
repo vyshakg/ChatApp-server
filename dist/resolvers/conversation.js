@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = require('mongoose');
+var _apolloServerExpress = require("apollo-server-express");
+
+var _mongoose = require("mongoose");
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-var _apolloServerExpress = require('apollo-server-express');
+var _models = require("../models");
 
-var _models = require('../models');
-
-var _resolverFunctions = require('../utils/resolverFunctions');
+var _resolverFunctions = require("../utils/resolverFunctions");
 
 var _resolverFunctions2 = _interopRequireDefault(_resolverFunctions);
 
@@ -40,10 +40,7 @@ exports.default = {
         const cid = await conversation.save();
 
         const newConversation = await _models.Conversation.findOne({ _id: cid.id }).populate({
-          path: 'participants',
-          populate: {
-            path: 'profilePic'
-          }
+          path: "participants"
         }).exec();
 
         const filterParticipants = newConversation.participants.filter(participant => {
@@ -66,7 +63,9 @@ exports.default = {
         if (!id) {
           throw new _apolloServerExpress.AuthenticationError();
         }
-        const conversation = await _models.Conversation.findOne({ _id: conversationId });
+        const conversation = await _models.Conversation.findOne({
+          _id: conversationId
+        });
         if (!conversation) {
           return false;
         }

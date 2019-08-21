@@ -1,8 +1,5 @@
-import User from './user';
-import Message from './message';
-import Conversation from './conversation';
-import ProfilePic from './profilePic';
+import Conversation from "./conversation";
+import Message from "./message";
+import User from "./user";
 
-export {
-  User, Message, Conversation, ProfilePic,
-};
+export { User, Message, Conversation };

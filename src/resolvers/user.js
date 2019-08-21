@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
-import { UserInputError, AuthenticationError } from 'apollo-server-express';
-import Joi from 'joi';
-import GraphQLJSON from 'graphql-type-json';
-import { User, ProfilePic } from '../models';
-import formatError from '../formatError';
-import { signUp, signIn } from '../validation';
-import allConversationFucntion from '../utils/resolverFunctions';
+import { AuthenticationError, UserInputError } from "apollo-server-express";
+import GraphQLJSON from "graphql-type-json";
+import Joi from "joi";
+import mongoose from "mongoose";
+import formatError from "../formatError";
+import { User } from "../models";
+import allConversationFucntion from "../utils/resolverFunctions";
+import { signIn, signUp } from "../validation";
 
 export default {
   JSON: GraphQLJSON,
@@ -14,17 +14,28 @@ export default {
       if (!id) {
         throw new AuthenticationError();
       }
-      const user = await User.findOne({ _id: id }).populate('profilePic');
+      const user = await User.findOne({ _id: id });
       user.conversations = allConversationFucntion(id);
       return user;
     },
-    allProfilePic: () => ProfilePic.find({}),
+    allProfilePic: () => {
+      return [
+        "helen",
+        "christian",
+        "elliot",
+        "joe",
+        "jenny",
+        "nan",
+        "steve",
+        "tony"
+      ];
+    },
     user: (root, { id }) => {
       try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
           throw new UserInputError("it's not a valid user ID.");
         }
-        return User.findById(id).populate('profilePic');
+        return User.findById(id);
       } catch (e) {
         return e;
       }
@@ -33,34 +44,36 @@ export default {
       if (!id) {
         throw new AuthenticationError();
       }
-      return User.find({ _id: { $ne: id } }).populate('profilePic');
-    },
+      return User.find({ _id: { $ne: id } });
+    }
   },
   Mutation: {
     signUp: async (root, args) => {
-      const {
-        email, phoneNo, password, username,
-      } = args;
+      const { email, phoneNo, password, username, profilePic } = args;
+
+      if (profilePic === null || profilePic === undefined)
+        args.profilePic = "jenny";
+
       try {
         await Joi.validate(
           {
             email,
             phoneNo,
             password,
-            username,
+            username
           },
           signUp,
-          { abortEarly: false },
+          { abortEarly: false }
         );
         const user = await User.create(args);
         return {
           ok: true,
-          id: user.id,
+          id: user.id
         };
       } catch (e) {
         return {
           ok: false,
-          errors: formatError(e),
+          errors: formatError(e)
         };
       }
     },
@@ -76,14 +89,14 @@ export default {
         return {
           ok: true,
           username: user.username,
-          token: user.createToken(),
+          token: user.createToken()
         };
       } catch (e) {
         return {
           ok: false,
-          errors: formatError(e),
+          errors: formatError(e)
         };
       }
-    },
-  },
+    }
+  }
 };

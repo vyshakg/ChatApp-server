@@ -1,17 +1,14 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _models = require('../models');
+var _models = require("../models");
 
 exports.default = async id => {
   const allConversation = await _models.Conversation.find({ participants: id }).populate({
-    path: 'participants',
-    populate: {
-      path: 'profilePic'
-    }
+    path: "participants"
   }).exec();
   // eslint-disable-next-line array-callback-return
   allConversation.map(conversation => {

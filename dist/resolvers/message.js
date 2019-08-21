@@ -1,26 +1,26 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = require('mongoose');
+var _apolloServerExpress = require("apollo-server-express");
+
+var _mongoose = require("mongoose");
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-var _apolloServerExpress = require('apollo-server-express');
+var _models = require("../models");
 
-var _pubSub = require('../pubSub');
+var _pubSub = require("../pubSub");
 
 var _pubSub2 = _interopRequireDefault(_pubSub);
 
-var _models = require('../models');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const { withFilter } = require('apollo-server-express');
+const { withFilter } = require("apollo-server-express");
 
-const NEW_MESSAGE = 'NEW_MESSAGE';
+const NEW_MESSAGE = "NEW_MESSAGE";
 
 exports.default = {
   Subscription: {
@@ -39,10 +39,7 @@ exports.default = {
           return [];
         }
         const message = await _models.Message.find({ conversationId }).populate({
-          path: 'from',
-          populate: {
-            path: 'profilePic'
-          }
+          path: "from"
         }).exec();
 
         return message;
@@ -57,7 +54,9 @@ exports.default = {
         if (!id) {
           throw new _apolloServerExpress.AuthenticationError();
         }
-        const conversation = await _models.Conversation.findOne({ _id: conversationId });
+        const conversation = await _models.Conversation.findOne({
+          _id: conversationId
+        });
         if (!conversation) {
           return false;
         }
@@ -70,10 +69,7 @@ exports.default = {
         let newMessage = await message.save();
         // eslint-disable-next-line
         newMessage = await _models.Message.findOne({ _id: newMessage._id }).populate({
-          path: 'from',
-          populate: {
-            path: 'profilePic'
-          }
+          path: "from"
         }).exec();
 
         _pubSub2.default.publish(NEW_MESSAGE, {

@@ -1,17 +1,14 @@
-import { Conversation } from '../models';
+import { Conversation } from "../models";
 
-export default async (id) => {
+export default async id => {
   const allConversation = await Conversation.find({ participants: id })
     .populate({
-      path: 'participants',
-      populate: {
-        path: 'profilePic',
-      },
+      path: "participants"
     })
     .exec();
   // eslint-disable-next-line array-callback-return
-  allConversation.map((conversation) => {
-    const filterParticipants = conversation.participants.filter((participant) => {
+  allConversation.map(conversation => {
+    const filterParticipants = conversation.participants.filter(participant => {
       if (participant.id === id) return false;
       return true;
     });

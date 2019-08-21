@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
-import { AuthenticationError } from 'apollo-server-express';
-import { Conversation, Message } from '../models';
-import allConversationFucntion from '../utils/resolverFunctions';
+import { AuthenticationError } from "apollo-server-express";
+import mongoose from "mongoose";
+import { Conversation, Message } from "../models";
+import allConversationFucntion from "../utils/resolverFunctions";
 
 export default {
   Query: {
@@ -10,7 +10,7 @@ export default {
         throw new AuthenticationError();
       }
       return allConversationFucntion(id);
-    },
+    }
   },
 
   Mutation: {
@@ -20,28 +20,30 @@ export default {
           throw new AuthenticationError();
         }
         const conversation = new Conversation({
-          participants: [mongoose.Types.ObjectId(userid), mongoose.Types.ObjectId(id)],
+          participants: [
+            mongoose.Types.ObjectId(userid),
+            mongoose.Types.ObjectId(id)
+          ]
         });
         const cid = await conversation.save();
 
         const newConversation = await Conversation.findOne({ _id: cid.id })
           .populate({
-            path: 'participants',
-            populate: {
-              path: 'profilePic',
-            },
+            path: "participants"
           })
           .exec();
 
-        const filterParticipants = newConversation.participants.filter((participant) => {
-          if (participant.id === id) return false;
-          return true;
-        });
+        const filterParticipants = newConversation.participants.filter(
+          participant => {
+            if (participant.id === id) return false;
+            return true;
+          }
+        );
         newConversation.participants = filterParticipants; // eslint-disable-line no-param-reassign
 
         return {
           ok: true,
-          conversation: newConversation,
+          conversation: newConversation
         };
       } catch (e) {
         console.log(e);
@@ -53,7 +55,9 @@ export default {
         if (!id) {
           throw new AuthenticationError();
         }
-        const conversation = await Conversation.findOne({ _id: conversationId });
+        const conversation = await Conversation.findOne({
+          _id: conversationId
+        });
         if (!conversation) {
           return false;
         }
@@ -64,6 +68,6 @@ export default {
         console.log(e);
         return false;
       }
-    },
-  },
+    }
+  }
 };
