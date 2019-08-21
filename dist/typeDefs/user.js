@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _apolloServerExpress = require('apollo-server-express');
+var _apolloServerExpress = require("apollo-server-express");
 
 exports.default = _apolloServerExpress.gql`
   scalar JSON
@@ -13,7 +13,7 @@ exports.default = _apolloServerExpress.gql`
     me: User!
     user(id: ID!): User
     allUsers: [User!]!
-    allProfilePic: JSON
+    allProfilePic: [String!]!
   }
 
   type Mutation {
@@ -22,7 +22,7 @@ exports.default = _apolloServerExpress.gql`
       username: String!
       password: String!
       phoneNo: String!
-      profilePic: ID!
+      profilePic: String
     ): SignUpResponse!
     signIn(email: String!, password: String!): SignInResponse!
   }
@@ -34,7 +34,7 @@ exports.default = _apolloServerExpress.gql`
     phoneNo: String!
     online: Boolean!
     conversations: [Conversation]!
-    profilePic: JSON
+    profilePic: String!
   }
 
   type SignInResponse {

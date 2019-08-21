@@ -1,34 +1,34 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = require('mongoose');
+var _apolloServerExpress = require("apollo-server-express");
 
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
-var _apolloServerExpress = require('apollo-server-express');
-
-var _joi = require('joi');
-
-var _joi2 = _interopRequireDefault(_joi);
-
-var _graphqlTypeJson = require('graphql-type-json');
+var _graphqlTypeJson = require("graphql-type-json");
 
 var _graphqlTypeJson2 = _interopRequireDefault(_graphqlTypeJson);
 
-var _models = require('../models');
+var _joi = require("joi");
 
-var _formatError = require('../formatError');
+var _joi2 = _interopRequireDefault(_joi);
+
+var _mongoose = require("mongoose");
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+var _formatError = require("../formatError");
 
 var _formatError2 = _interopRequireDefault(_formatError);
 
-var _validation = require('../validation');
+var _models = require("../models");
 
-var _resolverFunctions = require('../utils/resolverFunctions');
+var _resolverFunctions = require("../utils/resolverFunctions");
 
 var _resolverFunctions2 = _interopRequireDefault(_resolverFunctions);
+
+var _validation = require("../validation");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39,17 +39,19 @@ exports.default = {
       if (!id) {
         throw new _apolloServerExpress.AuthenticationError();
       }
-      const user = await _models.User.findOne({ _id: id }).populate('profilePic');
+      const user = await _models.User.findOne({ _id: id });
       user.conversations = (0, _resolverFunctions2.default)(id);
       return user;
     },
-    allProfilePic: () => _models.ProfilePic.find({}),
+    allProfilePic: () => {
+      return ["helen", "christian", "elliot", "joe", "jenny", "nan", "steve", "tony"];
+    },
     user: (root, { id }) => {
       try {
         if (!_mongoose2.default.Types.ObjectId.isValid(id)) {
           throw new _apolloServerExpress.UserInputError("it's not a valid user ID.");
         }
-        return _models.User.findById(id).populate('profilePic');
+        return _models.User.findById(id);
       } catch (e) {
         return e;
       }
@@ -58,14 +60,15 @@ exports.default = {
       if (!id) {
         throw new _apolloServerExpress.AuthenticationError();
       }
-      return _models.User.find({ _id: { $ne: id } }).populate('profilePic');
+      return _models.User.find({ _id: { $ne: id } });
     }
   },
   Mutation: {
     signUp: async (root, args) => {
-      const {
-        email, phoneNo, password, username
-      } = args;
+      const { email, phoneNo, password, username, profilePic } = args;
+
+      if (profilePic === null || profilePic === undefined) args.profilePic = "jenny";
+
       try {
         await _joi2.default.validate({
           email,

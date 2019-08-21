@@ -1,22 +1,22 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = require('mongoose');
+var _bcryptjs = require("bcryptjs");
 
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
-var _bcryptjs = require('bcryptjs');
-
-var _jsonwebtoken = require('jsonwebtoken');
+var _jsonwebtoken = require("jsonwebtoken");
 
 var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 
+var _mongoose = require("mongoose");
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const SECRET = 'secretkey';
+const SECRET = "secretkey";
 const { Schema } = _mongoose2.default;
 const userSchema = new Schema({
   email: {
@@ -40,15 +40,15 @@ const userSchema = new Schema({
     default: false
   },
   profilePic: {
-    type: Schema.Types.ObjectId,
-    ref: 'ProfilePic'
+    type: String,
+    default: "jenny"
   }
 }, {
   timestamps: true
 });
 
 // eslint-disable-next-line
-userSchema.pre('save', async function () {
+userSchema.pre("save", async function () {
   this.password = await (0, _bcryptjs.hash)(this.password, 10);
 });
 
@@ -67,6 +67,6 @@ userSchema.methods.createToken = function createToken() {
   }, SECRET);
 };
 
-const User = _mongoose2.default.model('User', userSchema);
+const User = _mongoose2.default.model("User", userSchema);
 
 exports.default = User;
