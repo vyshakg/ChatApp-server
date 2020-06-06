@@ -19,7 +19,7 @@
     "chat-app"
   ],
   "dependencies": {
-    "apollo-server-express": "^2.8.2",
+    "apollo-server-express": "^2.14.2",
     "babel-eslint": "^10.0.2",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
