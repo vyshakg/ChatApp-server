@@ -28,7 +28,7 @@
     "graphql-tools": "^4.0.5",
     "graphql-type-json": "^0.2.4",
     "joi": "^14.3.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "merge-graphql-schemas": "^1.7.0",
     "mongoose": "^5.6.10"
